@@ -7,7 +7,7 @@ export default function Home() {
 
       <section className="flex min-h-screen items-center justify-center pt-20">
         <h1 className="text-4xl font-bold">
-          Ethertrix - Engineering the digital solutions of tomorrow, today.
+          Ethertrix - Engineering the digital future.
         </h1>
       </section>
     </main>
