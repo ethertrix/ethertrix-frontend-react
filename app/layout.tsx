@@ -8,6 +8,9 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://www.ethertrix.com"),
   openGraph: { title: "Ethertrix | Architecture for execution", description: "Build the shared foundations that make execution reliable—and growth less fragile.", url: "/", siteName: "Ethertrix", type: "website" },
   robots: { index: true, follow: true },
+  icons: {
+    icon: [{ url: "/icon.png", type: "image/png" }],
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
