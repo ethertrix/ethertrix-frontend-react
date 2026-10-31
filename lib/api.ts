@@ -12,10 +12,11 @@ import {
   fallbackServices,
 } from './fallback-data';
 
+// Hostinger Nginx exposes the Fastify backend under /v1/
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') || 'https://api.ethertrix.com';
+  process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') || 'https://api.ethertrix.com/v1';
 
-const FETCH_TIMEOUT_MS = 3500;
+const FETCH_TIMEOUT_MS = 4000;
 
 async function fetchWithTimeout(url: string, options: RequestInit = {}): Promise<Response> {
   const controller = new AbortController();
@@ -34,7 +35,7 @@ async function fetchWithTimeout(url: string, options: RequestInit = {}): Promise
 
 export async function getCompanyProfile(): Promise<CompanyProfile> {
   try {
-    const res = await fetchWithTimeout(`${API_BASE_URL}/api/company`, {
+    const res = await fetchWithTimeout(`${API_BASE_URL}/company`, {
       next: { revalidate: 60 },
     });
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
@@ -48,7 +49,7 @@ export async function getCompanyProfile(): Promise<CompanyProfile> {
 
 export async function getProducts(): Promise<Product[]> {
   try {
-    const res = await fetchWithTimeout(`${API_BASE_URL}/api/products`, {
+    const res = await fetchWithTimeout(`${API_BASE_URL}/products`, {
       next: { revalidate: 60 },
     });
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
@@ -62,7 +63,7 @@ export async function getProducts(): Promise<Product[]> {
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {
   try {
-    const res = await fetchWithTimeout(`${API_BASE_URL}/api/products/${slug}`, {
+    const res = await fetchWithTimeout(`${API_BASE_URL}/products/${slug}`, {
       next: { revalidate: 60 },
     });
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
@@ -76,7 +77,7 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
 
 export async function getCaseStudies(): Promise<CaseStudy[]> {
   try {
-    const res = await fetchWithTimeout(`${API_BASE_URL}/api/case-studies`, {
+    const res = await fetchWithTimeout(`${API_BASE_URL}/case-studies`, {
       next: { revalidate: 60 },
     });
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
@@ -90,7 +91,7 @@ export async function getCaseStudies(): Promise<CaseStudy[]> {
 
 export async function getCaseStudyBySlug(slug: string): Promise<CaseStudy | null> {
   try {
-    const res = await fetchWithTimeout(`${API_BASE_URL}/api/case-studies/${slug}`, {
+    const res = await fetchWithTimeout(`${API_BASE_URL}/case-studies/${slug}`, {
       next: { revalidate: 60 },
     });
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
@@ -104,7 +105,7 @@ export async function getCaseStudyBySlug(slug: string): Promise<CaseStudy | null
 
 export async function getServices(): Promise<ServiceOffering[]> {
   try {
-    const res = await fetchWithTimeout(`${API_BASE_URL}/api/services`, {
+    const res = await fetchWithTimeout(`${API_BASE_URL}/services`, {
       next: { revalidate: 60 },
     });
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
@@ -120,7 +121,10 @@ export async function submitInquiry(
   data: InquiryFormData
 ): Promise<{ success: boolean; message: string }> {
   try {
-    const res = await fetch(`${API_BASE_URL}/api/inquiries`, {
+    // In browser, use same-origin proxy to eliminate CORS errors completely
+    const targetUrl = typeof window !== 'undefined' ? '/api/inquiries' : `${API_BASE_URL}/inquiries`;
+
+    const res = await fetch(targetUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
