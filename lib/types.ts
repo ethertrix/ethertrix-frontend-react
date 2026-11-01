@@ -1,3 +1,26 @@
+export interface CompanyPillar {
+  title: string;
+  description: string;
+}
+
+export interface JourneyStep {
+  step: string;
+  title: string;
+  description: string;
+}
+
+export interface WhyUsPillar {
+  title: string;
+  headline: string;
+  description: string;
+}
+
+export interface FounderStory {
+  headline: string;
+  focus: string;
+  bio: string;
+}
+
 export interface CompanyStats {
   label: string;
   value: string;
@@ -6,23 +29,64 @@ export interface CompanyStats {
 
 export interface CompanyProfile {
   name: string;
-  legalName: string;
   tagline: string;
+  positioning: string;
+  statement: string;
   headquarters: string;
-  operatingAddress: string;
   description: string;
   mission: string;
-  foundedYear: number;
-  stats: CompanyStats[];
+  pillars: CompanyPillar[];
+  journeySteps: JourneyStep[];
+  whyUs: WhyUsPillar[];
+  founderStory: FounderStory;
   contactEmail: string;
   contactPhone: string;
-  globalCoverage: string[];
   socialLinks: {
     platform: string;
     url: string;
   }[];
+  // Backward compatibility fields
+  legalName?: string;
+  operatingAddress?: string;
+  foundedYear?: number;
+  stats?: CompanyStats[];
+  globalCoverage?: string[];
 }
 
+export interface SportsOSCapability {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  icon: string;
+}
+
+export interface TargetAudience {
+  title: string;
+  description: string;
+  icon: string;
+}
+
+export interface ArchitectureLayer {
+  layer: string;
+  details: string;
+}
+
+export interface SportsOSProduct {
+  slug: string;
+  name: string;
+  label: string;
+  tagline: string;
+  headline: string;
+  subheadline: string;
+  description: string;
+  ecosystemNodes: string[];
+  capabilities: SportsOSCapability[];
+  architectureLayers: ArchitectureLayer[];
+  targetAudiences: TargetAudience[];
+}
+
+// Backward compatibility Product type
 export interface ProductModule {
   name: string;
   summary: string;
@@ -52,28 +116,21 @@ export interface Product {
   liveUrl?: string;
 }
 
-export interface CaseStudy {
-  slug: string;
+export interface ServiceItem {
   title: string;
-  category: 'Match Making' | 'Fleet Management' | 'Legal Tech' | 'Enterprise SaaS' | string;
-  clientIndustry: string;
-  headline: string;
-  summary: string;
-  challenge: string;
-  solution: string;
-  capabilities: string[];
-  techStack: string[];
-  platforms: string[];
-  metrics: {
-    metric: string;
-    label: string;
-  }[];
-  featured: boolean;
-  orderIndex: number;
-  image?: string;
-  gallery?: string[];
+  description: string;
+  tag?: string;
 }
 
+export interface ServiceCategory {
+  id: string;
+  title: string;
+  tagline: string;
+  description: string;
+  services: ServiceItem[];
+}
+
+// Backward compatibility ServiceOffering type
 export interface ServiceOffering {
   slug: string;
   title: string;
@@ -83,6 +140,42 @@ export interface ServiceOffering {
   deliverables: string[];
   techStack: string[];
   icon: string;
+}
+
+export interface ClientProject {
+  slug: string;
+  title: string;
+  type: 'Internal Product' | 'Client Solution';
+  category: string;
+  industry: string;
+  description: string;
+  challenge: string;
+  solution: string;
+  capabilities: string[];
+  techStack: string[];
+  platforms: string[];
+  featured: boolean;
+  orderIndex?: number;
+  image?: string;
+  gallery?: string[];
+}
+
+// Backward compatibility CaseStudy type
+export interface CaseStudy extends ClientProject {
+  headline?: string;
+  summary?: string;
+  clientIndustry?: string;
+  metrics?: {
+    metric: string;
+    label: string;
+  }[];
+}
+
+export interface HowWeWorkStep {
+  step: string;
+  title: string;
+  description: string;
+  details: string;
 }
 
 export interface InquiryFormData {

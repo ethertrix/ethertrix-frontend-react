@@ -99,7 +99,7 @@ export default function CaseStudiesSection({ caseStudies }: CaseStudiesSectionPr
                     </div>
 
                     <div className="mt-4 grid grid-cols-2 gap-4">
-                      {study.metrics.map((m, mIdx) => (
+                      {study.metrics?.map((m, mIdx) => (
                         <div key={mIdx} className="rounded-xl bg-white/[0.03] p-3 border border-white/5">
                           <div className="text-xl font-black text-white">{m.metric}</div>
                           <div className="text-[11px] text-slate-400 mt-0.5 leading-tight">{m.label}</div>

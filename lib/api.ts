@@ -1,5 +1,9 @@
 import {
   CompanyProfile,
+  SportsOSProduct,
+  ServiceCategory,
+  ClientProject,
+  HowWeWorkStep,
   Product,
   CaseStudy,
   ServiceOffering,
@@ -7,6 +11,10 @@ import {
 } from './types';
 import {
   fallbackCompanyProfile,
+  fallbackSportsOS,
+  fallbackServicesData,
+  fallbackClientProjects,
+  fallbackHowWeWork,
   fallbackProducts,
   fallbackCaseStudies,
   fallbackServices,
@@ -42,79 +50,90 @@ export async function getCompanyProfile(): Promise<CompanyProfile> {
     const json = await res.json();
     return json.data || fallbackCompanyProfile;
   } catch (error) {
-    console.warn('[API] Could not fetch company profile from backend, using fallback:', (error as Error).message);
+    console.warn('[API] getCompanyProfile fallback:', (error as Error).message);
     return fallbackCompanyProfile;
   }
 }
 
-export async function getProducts(): Promise<Product[]> {
+export async function getSportsOS(): Promise<SportsOSProduct> {
   try {
-    const res = await fetchWithTimeout(`${API_BASE_URL}/products`, {
+    const res = await fetchWithTimeout(`${API_BASE_URL}/products/sports-os`, {
       next: { revalidate: 60 },
     });
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
     const json = await res.json();
-    return json.data || fallbackProducts;
+    return json.data || fallbackSportsOS;
   } catch (error) {
-    console.warn('[API] Could not fetch products from backend, using fallback:', (error as Error).message);
-    return fallbackProducts;
+    console.warn('[API] getSportsOS fallback:', (error as Error).message);
+    return fallbackSportsOS;
   }
 }
 
-export async function getProductBySlug(slug: string): Promise<Product | null> {
-  try {
-    const res = await fetchWithTimeout(`${API_BASE_URL}/products/${slug}`, {
-      next: { revalidate: 60 },
-    });
-    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    const json = await res.json();
-    return json.data || fallbackProducts.find((p) => p.slug === slug) || null;
-  } catch (error) {
-    console.warn(`[API] Could not fetch product ${slug}, using fallback:`, (error as Error).message);
-    return fallbackProducts.find((p) => p.slug === slug) || null;
-  }
-}
-
-export async function getCaseStudies(): Promise<CaseStudy[]> {
-  try {
-    const res = await fetchWithTimeout(`${API_BASE_URL}/case-studies`, {
-      next: { revalidate: 60 },
-    });
-    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    const json = await res.json();
-    return json.data || fallbackCaseStudies;
-  } catch (error) {
-    console.warn('[API] Could not fetch case studies from backend, using fallback:', (error as Error).message);
-    return fallbackCaseStudies;
-  }
-}
-
-export async function getCaseStudyBySlug(slug: string): Promise<CaseStudy | null> {
-  try {
-    const res = await fetchWithTimeout(`${API_BASE_URL}/case-studies/${slug}`, {
-      next: { revalidate: 60 },
-    });
-    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    const json = await res.json();
-    return json.data || fallbackCaseStudies.find((c) => c.slug === slug) || null;
-  } catch (error) {
-    console.warn(`[API] Could not fetch case study ${slug}, using fallback:`, (error as Error).message);
-    return fallbackCaseStudies.find((c) => c.slug === slug) || null;
-  }
-}
-
-export async function getServices(): Promise<ServiceOffering[]> {
+export async function getServiceCategories(): Promise<ServiceCategory[]> {
   try {
     const res = await fetchWithTimeout(`${API_BASE_URL}/services`, {
       next: { revalidate: 60 },
     });
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
     const json = await res.json();
-    return json.data || fallbackServices;
+    return json.data || fallbackServicesData;
   } catch (error) {
-    console.warn('[API] Could not fetch services from backend, using fallback:', (error as Error).message);
-    return fallbackServices;
+    console.warn('[API] getServiceCategories fallback:', (error as Error).message);
+    return fallbackServicesData;
   }
+}
+
+export async function getClientProjects(): Promise<ClientProject[]> {
+  try {
+    const res = await fetchWithTimeout(`${API_BASE_URL}/case-studies`, {
+      next: { revalidate: 60 },
+    });
+    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+    const json = await res.json();
+    return json.data || fallbackClientProjects;
+  } catch (error) {
+    console.warn('[API] getClientProjects fallback:', (error as Error).message);
+    return fallbackClientProjects;
+  }
+}
+
+export async function getClientProjectBySlug(slug: string): Promise<ClientProject | null> {
+  try {
+    const res = await fetchWithTimeout(`${API_BASE_URL}/case-studies/${slug}`, {
+      next: { revalidate: 60 },
+    });
+    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+    const json = await res.json();
+    return json.data || fallbackClientProjects.find((p) => p.slug === slug) || null;
+  } catch (error) {
+    console.warn(`[API] getClientProjectBySlug (${slug}) fallback:`, (error as Error).message);
+    return fallbackClientProjects.find((p) => p.slug === slug) || null;
+  }
+}
+
+export async function getHowWeWork(): Promise<HowWeWorkStep[]> {
+  return fallbackHowWeWork;
+}
+
+// Backward compatibility methods
+export async function getProducts(): Promise<Product[]> {
+  return fallbackProducts;
+}
+
+export async function getProductBySlug(slug: string): Promise<Product | null> {
+  return fallbackProducts.find((p) => p.slug === slug) || null;
+}
+
+export async function getCaseStudies(): Promise<CaseStudy[]> {
+  return fallbackCaseStudies;
+}
+
+export async function getCaseStudyBySlug(slug: string): Promise<CaseStudy | null> {
+  return fallbackCaseStudies.find((c) => c.slug === slug) || null;
+}
+
+export async function getServices(): Promise<ServiceOffering[]> {
+  return fallbackServices;
 }
 
 export async function submitInquiry(

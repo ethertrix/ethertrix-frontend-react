@@ -76,7 +76,7 @@ export default function Hero({ company }: HeroProps) {
 
         {/* Dynamic Metrics Row */}
         <div className="mt-16 grid grid-cols-2 gap-4 sm:grid-cols-4 lg:mt-24">
-          {company.stats.map((stat, idx) => (
+          {company.stats?.map((stat, idx) => (
             <div
               key={idx}
               className="glass-panel relative overflow-hidden rounded-2xl p-6 transition-all hover:border-emerald-500/30"
